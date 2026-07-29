@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5S Rundgang Logistics HD</title>
+    <!-- Tailwind CSS für modernes, schnelles Layout -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- jsPDF & html2canvas für HD-Protokoll-Downloads -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        henkelRed: '#E1000F',
+                        henkelRedDark: '#B8000C',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .custom-ring:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(225, 0, 15, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen text-gray-800 font-sans pb-12">
+
+    <!-- Header mit Henkel Logo & Titel -->
+    <header class="bg-henkelRed text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <!-- Henkel Logo SVG -->
+                <div class="bg-white rounded-full p-2 w-12 h-12 flex items-center justify-center shadow">
+                    <svg class="w-8 h-8 text-henkelRed fill-current" viewBox="0 0 100 60">
+                        <ellipse cx="50" cy="30" rx="45" ry="25" fill="none" stroke="#E1000F" stroke-width="6"/>
+                        <text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-weight="bold" font-size="22" fill="#E1000F" font-family="Arial">Henkel</text>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-wide">5S Rundgang</h1>
+                    <p class="text-xs text-red-100">Logistics HD Standard</p>
+                </div>
+            </div>
+            <div class="text-right">
+                <span id="liveClock" class="text-sm font-semibold bg-henkelRedDark px-3 py-1 rounded-full text-white"></span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4 mt-6">
+        <form id="auditForm" onsubmit="event.preventDefault();" class="space-y-6">
+
+            <!-- Stammdaten Card -->
+            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-henkelRed">
+                <h2 class="text-lg font-bold text-gray-700 mb-4 border-b pb-2">1. Stammdaten</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-600 mb-1">Name des Prüfers *</label>
+                        <input type="text" id="inspectorName" required placeholder="Vorname Nachname" 
+                            class="w-full border border-gray-300 rounded-lg p-2.5 custom-ring focus:border-henkelRed transition">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-600 mb-1">Bereich auswählen *</label>
+                        <select id="location" required class="w-full border border-gray-300 rounded-lg p-2.5 custom-ring focus:border-henkelRed transition bg-white">
+                            <option value="" disabled selected>-- Bitte Bereich wählen --</option>
+                            <option value="Wareneingang">Wareneingang</option>
+                            <option value="Tank & Silo">Tank & Silo</option>
+                            <option value="Bau 24-25-26">Bau 24-25-26</option>
+                            <option value="Bau 55">Bau 55</option>
+                            <option value="Bau 54">Bau 54</option>
+                            <option value="Bau 42">Bau 42</option>
+                            <option value="Bau 46">Bau 46</option>
+                            <option value="Bau 39">Bau 39</option>
+                            <option value="Übergabeplätze">Übergabeplätze</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5S Prüffragen Container -->
+            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-henkelRed">
+                <h2 class="text-lg font-bold text-gray-700 mb-4 border-b pb-2">2. 5S Checkliste</h2>
+                <div id="questionsContainer" class="space-y-6">
+                    <!-- Fragen werden per JS dynamisch generiert -->
+                </div>
+            </div>
+
+            <!-- Sonstiges Card -->
+            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-henkelRed">
+                <h2 class="text-lg font-bold text-gray-700 mb-4 border-b pb-2">3. Sonstiges & Bemerkungen</h2>
+                <div class="space-y-3">
+                    <textarea id="otherText" rows="3" placeholder="Zusätzliche Anmerkungen oder Abweichungen..." 
+                        class="w-full border border-gray-300 rounded-lg p-3 custom-ring focus:border-henkelRed transition"></textarea>
+                    
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-600 mb-1">HD-Foto hinzufügen (Sonstiges)</label>
+                        <input type="file" accept="image/*" id="otherImage" onchange="previewImage(this, 'preview_other')" 
+                            class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-henkelRed hover:file:bg-red-100 cursor-pointer">
+                        <div id="preview_other" class="mt-2 hidden">
+                            <img src="" alt="Vorschau" class="h-32 rounded-lg border object-cover shadow-sm">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Download Button -->
+            <div class="text-center pt-4">
+                <button type="button" onclick="generatePDF()" 
+                    class="bg-henkelRed hover:bg-henkelRedDark text-white font-bold py-3 px-8 rounded-xl shadow-lg hover:shadow-xl transition transform active:scale-95 flex items-center justify-center mx-auto space-x-2">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    <span>5S Protokoll als PDF herunterladen</span>
+                </button>
+            </div>
+        </form>
+    </main>
+
+    <!-- Verstecktes PDF-Template (wird für HD-Export gerendert) -->
+    <div style="position: absolute; left: -9999px; top: -9999px;">
+        <div id="pdfTemplate" class="p-8 bg-white w-[800px] text-gray-900 font-sans">
+            <div class="flex justify-between items-center border-b-4 border-henkelRed pb-4 mb-6">
+                <div>
+                    <h1 class="text-2xl font-bold text-henkelRed">5S RUNDGANG PROTOKOLL</h1>
+                    <p class="text-sm text-gray-600">Logistics HD Standard</p>
+                </div>
+                <!-- Henkel Text/Logo im Protokoll -->
+                <div class="text-right">
+                    <span class="text-2xl font-black text-henkelRed border-2 border-henkelRed px-3 py-1 rounded-full">Henkel</span>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 p-4 rounded-lg mb-6 grid grid-cols-2 gap-4 border border-gray-200">
+                <div><strong>Prüfer:</strong> <span id="pdfInspector"></span></div>
+                <div><strong>Bereich:</strong> <span id="pdfLocation"></span></div>
+                <div><strong>Datum & Zeit:</strong> <span id="pdfTimestamp"></span></div>
+            </div>
+
+            <div id="pdfQuestions" class="space-y-4 mb-6">
+                <!-- Dynamischer Inhalt -->
+            </div>
+
+            <div id="pdfOtherSection" class="border-t pt-4">
+                <h3 class="font-bold text-gray-700 mb-1">Sonstiges:</h3>
+                <p id="pdfOtherText" class="text-sm bg-gray-50 p-3 rounded border border-gray-200 min-h-[40px]"></p>
+                <div id="pdfOtherImageContainer" class="mt-2 hidden">
+                    <img id="pdfOtherImg" src="" class="max-h-48 rounded border">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fragenkatalog
+        const questions = [
+            "Sind die Palettenplätze gereinigt?",
+            "Werden Standards eingehalten?",
+            "Sauberkeit Arbeitsplatz",
+            "Defekte Betriebsmittel",
+            "Dokumente auf dem aktuellen Stand?",
+            "Checklisten ausgefüllt?"
+        ];
+
+        // Bilder im Speicher halten (Base64)
+        const imageStore = {};
+
+        // Live-Uhr im Header
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('liveClock').innerText = now.toLocaleString('de-DE');
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Checkliste dynamisch aufbauen
+        const container = document.getElementById('questionsContainer');
+        questions.forEach((q, index) => {
+            const qId = `q_${index}`;
+            const card = document.createElement('div');
+            card.className = "p-4 bg-gray-50 rounded-lg border border-gray-200 space-y-3";
+            card.innerHTML = `
+                <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2">
+                    <span class="font-semibold text-gray-800">${index + 1}. ${q}</span>
+                    <div class="flex items-center space-x-4">
+                        <label class="inline-flex items-center cursor-pointer">
+                            <input type="radio" name="${qId}_status" value="OK" checked class="text-henkelRed focus:ring-henkelRed h-4 w-4">
+                            <span class="ml-2 text-sm text-green-700 font-bold">OK</span>
+                        </label>
+                        <label class="inline-flex items-center cursor-pointer">
+                            <input type="radio" name="${qId}_status" value="NOK" class="text-henkelRed focus:ring-henkelRed h-4 w-4">
+                            <span class="ml-2 text-sm text-red-600 font-bold">NOK</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                    <input type="text" id="${qId}_text" placeholder="Bemerkung / Ma&szlig;nahme..." 
+                        class="w-full text-sm border border-gray-300 rounded-md p-2 bg-white custom-ring">
+                    <div>
+                        <input type="file" accept="image/*" onchange="previewImage(this, 'preview_${qId}', '${qId}')" 
+                            class="block w-full text-xs text-gray-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-red-50 file:text-henkelRed hover:file:bg-red-100 cursor-pointer">
+                    </div>
+                </div>
+                <div id="preview_${qId}" class="hidden pt-1">
+                    <img src="" alt="Vorschau" class="h-24 rounded border object-cover">
+                </div>
+            `;
+            container.appendChild(card);
+        });
+
+        // Bildvorschau und HD-Konvertierung als Base64
+        function previewImage(input, previewId, storeKey = null) {
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const previewDiv = document.getElementById(previewId);
+                    const img = previewDiv.querySelector('img');
+                    img.src = e.target.result;
+                    previewDiv.classList.remove('hidden');
+
+                    if(storeKey) {
+                        imageStore[storeKey] = e.target.result;
+                    } else if(previewId === 'preview_other') {
+                        imageStore['other'] = e.target.result;
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // PDF Erstellung & Download
+        async function generatePDF() {
+            const name = document.getElementById('inspectorName').value.trim();
+            const location = document.getElementById('location').value;
+
+            if (!name || !location) {
+                alert("Bitte füllen Sie den Namen und den Bereich aus.");
+                return;
+            }
+
+            // PDF Template füllen
+            document.getElementById('pdfInspector').innerText = name;
+            document.getElementById('pdfLocation').innerText = location;
+            document.getElementById('pdfTimestamp').innerText = new Date().toLocaleString('de-DE');
+
+            const pdfQuestions = document.getElementById('pdfQuestions');
+            pdfQuestions.innerHTML = '';
+
+            questions.forEach((q, index) => {
+                const qId = `q_${index}`;
+                const status = document.querySelector(`input[name="${qId}_status"]:checked`).value;
+                const note = document.getElementById(`${qId}_text`).value.trim();
+                const imgSrc = imageStore[qId];
+
+                const statusColor = status === 'OK' ? 'color: green;' : 'color: red;';
+
+                let qHtml = `
+                    <div class="border-b pb-2">
+                        <div class="flex justify-between font-bold">
+                            <span>${index + 1}. ${q}</span>
+                            <span style="${statusColor}">${status}</span>
+                        </div>
+                        ${note ? `<p class="text-xs text-gray-600 mt-1"><strong>Bemerkung:</strong> ${note}</p>` : ''}
+                        ${imgSrc ? `<div class="mt-2"><img src="${imgSrc}" class="max-h-40 rounded border"></div>` : ''}
+                    </div>
+                `;
+                pdfQuestions.innerHTML += qHtml;
+            });
+
+            // Sonstiges im PDF
+            const otherText = document.getElementById('otherText').value.trim();
+            document.getElementById('pdfOtherText').innerText = otherText || 'Keine Einträge';
+            
+            const pdfOtherContainer = document.getElementById('pdfOtherImageContainer');
+            if (imageStore['other']) {
+                document.getElementById('pdfOtherImg').src = imageStore['other'];
+                pdfOtherContainer.classList.remove('hidden');
+            } else {
+                pdfOtherContainer.classList.add('hidden');
+            }
+
+            // HTML2Canvas & jsPDF Generierung (in hoher Skalierung für HD)
+            const element = document.getElementById('pdfTemplate');
+            
+            const canvas = await html2canvas(element, {
+                scale: 2, // 2x Skalierung für scharfe HD-Bilder und Text
+                useCORS: true,
+                logging: false
+            });
+
+            const imgData = canvas.toDataURL('image/jpeg', 0.95);
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('p', 'mm', 'a4');
+
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+            pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+            
+            // Speichern mit dynamischem Dateinamen
+            const filename = `5S_Rundgang_${location.replace(/\s+/g, '_')}_${new Date().toISOString().slice(0,10)}.pdf`;
+            pdf.save(filename);
+        }
+    </script>
+</body>
+</html>
