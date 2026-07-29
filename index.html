@@ -27,6 +27,17 @@
             outline: none;
             box-shadow: 0 0 0 3px rgba(225, 0, 15, 0.3);
         }
+        /* Versteckt den Standard "Datei auswählen" Text/Button komplett */
+        .visually-hidden-input {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
     </style>
 </head>
 <body class="bg-gray-100 min-h-screen text-gray-800 font-sans pb-12">
@@ -93,17 +104,29 @@
             <!-- Sonstiges Card -->
             <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-henkelRed">
                 <h2 class="text-lg font-bold text-gray-700 mb-4 border-b pb-2">3. Sonstiges & Bemerkungen</h2>
-                <div class="space-y-3">
+                <div class="space-y-4">
                     <textarea id="otherText" rows="3" placeholder="Zusätzliche Anmerkungen oder Abweichungen..." 
                         class="w-full border border-gray-300 rounded-lg p-3 custom-ring focus:border-henkelRed transition"></textarea>
                     
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-600 mb-2">Foto aufnehmen (Sonstiges)</label>
-                        <!-- capture="environment" öffnet direkt die Rückkamera auf Mobilgeräten -->
+                    <div class="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl p-4 bg-gray-50">
+                        <label class="block text-sm font-semibold text-gray-600 mb-3">Foto aufnehmen (Sonstiges)</label>
+                        
+                        <!-- VERSTECKTES INPUT -->
                         <input type="file" accept="image/*" capture="environment" id="otherImage" onchange="previewImage(this, 'preview_other')" 
-                            class="block w-full text-sm text-gray-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-henkelRed hover:file:bg-red-100 cursor-pointer">
-                        <div id="preview_other" class="mt-2 hidden">
-                            <img src="" alt="Vorschau" class="h-32 rounded-lg border object-cover shadow-sm">
+                            class="visually-hidden-input">
+                        
+                        <!-- SICHTBARER CUSTOM BUTTON -->
+                        <button type="button" id="btn_otherImage" onclick="document.getElementById('otherImage').click()"
+                            class="bg-henkelRed hover:bg-henkelRedDark text-white font-bold py-2.5 px-5 rounded-lg shadow flex items-center space-x-2 transition">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            <span>Foto aufnehmen</span>
+                        </button>
+
+                        <!-- VORSCHAU (ERSETZT DEN BUTTON SOBALD BILD DA IST) -->
+                        <div id="preview_other" class="mt-2 hidden text-center">
+                            <img src="" alt="Vorschau" onclick="document.getElementById('otherImage').click()"
+                                class="h-32 w-auto rounded-lg border-4 border-white shadow-md object-cover cursor-pointer hover:opacity-80 transition">
+                            <p class="text-xs text-gray-500 mt-1">Tippen zum Ändern</p>
                         </div>
                     </div>
                 </div>
@@ -112,8 +135,8 @@
             <!-- Download Button -->
             <div class="text-center pt-4">
                 <button type="button" onclick="generatePDF()" 
-                    class="bg-henkelRed hover:bg-henkelRedDark text-white font-bold py-3 px-8 rounded-xl shadow-lg hover:shadow-xl transition transform active:scale-95 flex items-center justify-center mx-auto space-x-2">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    class="bg-henkelRed hover:bg-henkelRedDark text-white font-bold py-4 px-10 rounded-2xl shadow-lg hover:shadow-xl transition transform active:scale-95 flex items-center justify-center mx-auto space-x-3 text-lg">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                     </svg>
                     <span>5S Protokoll als PDF herunterladen</span>
@@ -180,31 +203,44 @@
             const card = document.createElement('div');
             card.className = "p-4 bg-gray-50 rounded-lg border border-gray-200 space-y-3";
             
-            // capture="environment" stellt direkt auf Kameraaufnahmen um
             card.innerHTML = `
                 <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2">
                     <span class="font-semibold text-gray-800">${index + 1}. ${q}</span>
-                    <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-4 bg-white p-1.5 rounded-lg border shadow-inner">
                         <label class="inline-flex items-center cursor-pointer">
-                            <input type="radio" name="${qId}_status" value="OK" checked class="text-henkelRed focus:ring-henkelRed h-4 w-4">
+                            <input type="radio" name="${qId}_status" value="OK" checked class="text-henkelRed focus:ring-henkelRed h-5 w-5">
                             <span class="ml-2 text-sm text-green-700 font-bold">OK</span>
                         </label>
                         <label class="inline-flex items-center cursor-pointer">
-                            <input type="radio" name="${qId}_status" value="NOK" class="text-henkelRed focus:ring-henkelRed h-4 w-4">
+                            <input type="radio" name="${qId}_status" value="NOK" class="text-henkelRed focus:ring-henkelRed h-5 w-5">
                             <span class="ml-2 text-sm text-red-600 font-bold">NOK</span>
                         </label>
                     </div>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 items-center">
                     <input type="text" id="${qId}_text" placeholder="Bemerkung / Maßnahme..." 
-                        class="w-full text-sm border border-gray-300 rounded-md p-2 bg-white custom-ring">
-                    <div>
-                        <input type="file" accept="image/*" capture="environment" onchange="previewImage(this, 'preview_${qId}', '${qId}')" 
-                            class="block w-full text-xs text-gray-500 file:mr-2 file:py-2 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-red-50 file:text-henkelRed hover:file:bg-red-100 cursor-pointer">
+                        class="w-full text-sm border border-gray-300 rounded-md p-2.5 bg-white custom-ring shadow-sm">
+                    
+                    <!-- FOTO BEREICH -->
+                    <div class="flex items-center justify-center md:justify-start space-x-3">
+                        <!-- VERSTECKTES INPUT MIT CAPTURE -->
+                        <input type="file" accept="image/*" capture="environment" id="${qId}_file" 
+                            onchange="previewImage(this, 'preview_${qId}', '${qId}')" 
+                            class="visually-hidden-input">
+                        
+                        <!-- SICHTBARER BUTTON -->
+                        <button type="button" id="btn_${qId}" onclick="document.getElementById('${qId}_file').click()"
+                            class="bg-gray-600 hover:bg-gray-700 text-white text-xs font-bold py-2 px-4 rounded-full shadow flex items-center space-x-1.5 transition whitespace-nowrap">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            <span>Foto aufnehmen</span>
+                        </button>
+
+                        <!-- MINI VORSCHAU (KLICKBAR) -->
+                        <div id="preview_${qId}" class="hidden">
+                            <img src="" alt="Vorschau" onclick="document.getElementById('${qId}_file').click()"
+                                class="h-12 w-12 rounded border-2 border-white shadow object-cover cursor-pointer hover:opacity-80 transition">
+                        </div>
                     </div>
-                </div>
-                <div id="preview_${qId}" class="hidden pt-1">
-                    <img src="" alt="Vorschau" class="h-24 rounded border object-cover">
                 </div>
             `;
             container.appendChild(card);
@@ -212,12 +248,18 @@
 
         function previewImage(input, previewId, storeKey = null) {
             const file = input.files[0];
+            const qId = storeKey || 'other';
+            const btn = document.getElementById(`btn_${qId === 'other' ? 'otherImage' : qId}`);
+
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const previewDiv = document.getElementById(previewId);
                     const img = previewDiv.querySelector('img');
                     img.src = e.target.result;
+                    
+                    // Button verstecken, Vorschau zeigen
+                    btn.classList.add('hidden');
                     previewDiv.classList.remove('hidden');
 
                     if(storeKey) {
@@ -239,6 +281,12 @@
                 return;
             }
 
+            // Button Text ändern um Ladevorgang anzuzeigen
+            const downloadBtn = event.currentTarget;
+            const originalBtnText = downloadBtn.innerHTML;
+            downloadBtn.innerHTML = `<svg class="animate-spin h-5 w-5 mr-3 text-white" viewBox="0 0 24 24"><!-- SVG Spinner --></svg> Generiere PDF...`;
+            downloadBtn.disabled = true;
+
             document.getElementById('pdfInspector').innerText = name;
             document.getElementById('pdfLocation').innerText = location;
             document.getElementById('pdfTimestamp').innerText = new Date().toLocaleString('de-DE');
@@ -255,7 +303,7 @@
                 const statusColor = status === 'OK' ? 'color: green;' : 'color: red;';
 
                 let qHtml = `
-                    <div class="border-b pb-2">
+                    <div class="border-b pb-2 page-break-inside-avoid">
                         <div class="flex justify-between font-bold">
                             <span>${index + 1}. ${q}</span>
                             <span style="${statusColor}">${status}</span>
@@ -280,23 +328,33 @@
 
             const element = document.getElementById('pdfTemplate');
             
-            const canvas = await html2canvas(element, {
-                scale: 2,
-                useCORS: true,
-                logging: false
-            });
+            try {
+                const canvas = await html2canvas(element, {
+                    scale: 2, // HD Qualität
+                    useCORS: true,
+                    logging: false,
+                    windowWidth: 800
+                });
 
-            const imgData = canvas.toDataURL('image/jpeg', 0.95);
-            const { jsPDF } = window.jspdf;
-            const pdf = new jsPDF('p', 'mm', 'a4');
+                const imgData = canvas.toDataURL('image/jpeg', 0.95);
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
 
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
-            pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
-            
-            const filename = `5S_Rundgang_${location.replace(/\s+/g, '_')}_${new Date().toISOString().slice(0,10)}.pdf`;
-            pdf.save(filename);
+                pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+                
+                const filename = `5S_LogisticsHD_${location.replace(/\s+/g, '_')}_${new Date().toISOString().slice(0,10)}.pdf`;
+                pdf.save(filename);
+            } catch (error) {
+                console.error("PDF Fehler:", error);
+                alert("Fehler beim Erstellen des PDFs.");
+            } finally {
+                // Button Reset
+                downloadBtn.innerHTML = originalBtnText;
+                downloadBtn.disabled = false;
+            }
         }
     </script>
 </body>
