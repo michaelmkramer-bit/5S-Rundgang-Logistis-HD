@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>5S Rundgang Logistics HD</title>
-    <!-- Tailwind CSS für modernes, schnelles Layout -->
+    <!-- Tailwind CSS für modernes Layout -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- jsPDF & html2canvas für HD-Protokoll-Downloads -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -35,7 +35,6 @@
     <header class="bg-henkelRed text-white shadow-lg sticky top-0 z-50">
         <div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center space-x-3">
-                <!-- Henkel Logo SVG -->
                 <div class="bg-white rounded-full p-2 w-12 h-12 flex items-center justify-center shadow">
                     <svg class="w-8 h-8 text-henkelRed fill-current" viewBox="0 0 100 60">
                         <ellipse cx="50" cy="30" rx="45" ry="25" fill="none" stroke="#E1000F" stroke-width="6"/>
@@ -99,9 +98,10 @@
                         class="w-full border border-gray-300 rounded-lg p-3 custom-ring focus:border-henkelRed transition"></textarea>
                     
                     <div>
-                        <label class="block text-sm font-semibold text-gray-600 mb-1">HD-Foto hinzufügen (Sonstiges)</label>
-                        <input type="file" accept="image/*" id="otherImage" onchange="previewImage(this, 'preview_other')" 
-                            class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-henkelRed hover:file:bg-red-100 cursor-pointer">
+                        <label class="block text-sm font-semibold text-gray-600 mb-2">Foto aufnehmen (Sonstiges)</label>
+                        <!-- capture="environment" öffnet direkt die Rückkamera auf Mobilgeräten -->
+                        <input type="file" accept="image/*" capture="environment" id="otherImage" onchange="previewImage(this, 'preview_other')" 
+                            class="block w-full text-sm text-gray-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-henkelRed hover:file:bg-red-100 cursor-pointer">
                         <div id="preview_other" class="mt-2 hidden">
                             <img src="" alt="Vorschau" class="h-32 rounded-lg border object-cover shadow-sm">
                         </div>
@@ -130,7 +130,6 @@
                     <h1 class="text-2xl font-bold text-henkelRed">5S RUNDGANG PROTOKOLL</h1>
                     <p class="text-sm text-gray-600">Logistics HD Standard</p>
                 </div>
-                <!-- Henkel Text/Logo im Protokoll -->
                 <div class="text-right">
                     <span class="text-2xl font-black text-henkelRed border-2 border-henkelRed px-3 py-1 rounded-full">Henkel</span>
                 </div>
@@ -157,7 +156,6 @@
     </div>
 
     <script>
-        // Fragenkatalog
         const questions = [
             "Sind die Palettenplätze gereinigt?",
             "Werden Standards eingehalten?",
@@ -167,10 +165,8 @@
             "Checklisten ausgefüllt?"
         ];
 
-        // Bilder im Speicher halten (Base64)
         const imageStore = {};
 
-        // Live-Uhr im Header
         function updateClock() {
             const now = new Date();
             document.getElementById('liveClock').innerText = now.toLocaleString('de-DE');
@@ -178,12 +174,13 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        // Checkliste dynamisch aufbauen
         const container = document.getElementById('questionsContainer');
         questions.forEach((q, index) => {
             const qId = `q_${index}`;
             const card = document.createElement('div');
             card.className = "p-4 bg-gray-50 rounded-lg border border-gray-200 space-y-3";
+            
+            // capture="environment" stellt direkt auf Kameraaufnahmen um
             card.innerHTML = `
                 <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2">
                     <span class="font-semibold text-gray-800">${index + 1}. ${q}</span>
@@ -199,11 +196,11 @@
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
-                    <input type="text" id="${qId}_text" placeholder="Bemerkung / Ma&szlig;nahme..." 
+                    <input type="text" id="${qId}_text" placeholder="Bemerkung / Maßnahme..." 
                         class="w-full text-sm border border-gray-300 rounded-md p-2 bg-white custom-ring">
                     <div>
-                        <input type="file" accept="image/*" onchange="previewImage(this, 'preview_${qId}', '${qId}')" 
-                            class="block w-full text-xs text-gray-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-red-50 file:text-henkelRed hover:file:bg-red-100 cursor-pointer">
+                        <input type="file" accept="image/*" capture="environment" onchange="previewImage(this, 'preview_${qId}', '${qId}')" 
+                            class="block w-full text-xs text-gray-500 file:mr-2 file:py-2 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-red-50 file:text-henkelRed hover:file:bg-red-100 cursor-pointer">
                     </div>
                 </div>
                 <div id="preview_${qId}" class="hidden pt-1">
@@ -213,7 +210,6 @@
             container.appendChild(card);
         });
 
-        // Bildvorschau und HD-Konvertierung als Base64
         function previewImage(input, previewId, storeKey = null) {
             const file = input.files[0];
             if (file) {
@@ -234,7 +230,6 @@
             }
         }
 
-        // PDF Erstellung & Download
         async function generatePDF() {
             const name = document.getElementById('inspectorName').value.trim();
             const location = document.getElementById('location').value;
@@ -244,7 +239,6 @@
                 return;
             }
 
-            // PDF Template füllen
             document.getElementById('pdfInspector').innerText = name;
             document.getElementById('pdfLocation').innerText = location;
             document.getElementById('pdfTimestamp').innerText = new Date().toLocaleString('de-DE');
@@ -273,7 +267,6 @@
                 pdfQuestions.innerHTML += qHtml;
             });
 
-            // Sonstiges im PDF
             const otherText = document.getElementById('otherText').value.trim();
             document.getElementById('pdfOtherText').innerText = otherText || 'Keine Einträge';
             
@@ -285,11 +278,10 @@
                 pdfOtherContainer.classList.add('hidden');
             }
 
-            // HTML2Canvas & jsPDF Generierung (in hoher Skalierung für HD)
             const element = document.getElementById('pdfTemplate');
             
             const canvas = await html2canvas(element, {
-                scale: 2, // 2x Skalierung für scharfe HD-Bilder und Text
+                scale: 2,
                 useCORS: true,
                 logging: false
             });
@@ -303,7 +295,6 @@
 
             pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
             
-            // Speichern mit dynamischem Dateinamen
             const filename = `5S_Rundgang_${location.replace(/\s+/g, '_')}_${new Date().toISOString().slice(0,10)}.pdf`;
             pdf.save(filename);
         }
