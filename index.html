@@ -26,7 +26,6 @@
             outline: none;
             box-shadow: 0 0 0 3px rgba(225, 0, 15, 0.3);
         }
-        /* Versteckt den Standard "Datei auswählen" Input komplett */
         .visually-hidden-input {
             position: absolute;
             width: 1px;
@@ -100,34 +99,57 @@
                 </div>
             </div>
 
-            <!-- Sonstiges Card -->
+            <!-- Sonstiges Card mit 2 Feldern + Fotos -->
             <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-henkelRed">
                 <h2 class="text-lg font-bold text-gray-700 mb-4 border-b pb-2">3. Sonstiges & Bemerkungen</h2>
-                <div class="space-y-4">
-                    <textarea id="otherText" rows="3" placeholder="Zusätzliche Anmerkungen oder Abweichungen..." 
-                        class="w-full border border-gray-300 rounded-lg p-3 custom-ring focus:border-henkelRed transition"></textarea>
-                    
-                    <div class="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl p-4 bg-gray-50">
-                        <label class="block text-sm font-semibold text-gray-600 mb-3">Foto aufnehmen (Sonstiges)</label>
-                        
-                        <!-- VERSTECKTES INPUT -->
-                        <input type="file" accept="image/*" capture="environment" id="otherImage" onchange="previewImage(this, 'preview_other')" 
-                            class="visually-hidden-input">
-                        
-                        <!-- SICHTBARER BUTTON -->
-                        <button type="button" id="btn_otherImage" onclick="document.getElementById('otherImage').click()"
-                            class="bg-henkelRed hover:bg-henkelRedDark text-white font-bold py-2.5 px-5 rounded-lg shadow flex items-center space-x-2 transition">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                            <span>Foto aufnehmen</span>
-                        </button>
+                <div class="space-y-6">
 
-                        <!-- VORSCHAU -->
-                        <div id="preview_other" class="mt-2 hidden text-center">
-                            <img src="" alt="Vorschau" onclick="document.getElementById('otherImage').click()"
-                                class="h-32 w-auto rounded-lg border-4 border-white shadow-md object-cover cursor-pointer hover:opacity-80 transition">
-                            <p class="text-xs text-gray-500 mt-1">Tippen zum Ändern</p>
+                    <!-- Bemerkung 1 -->
+                    <div class="p-4 bg-gray-50 rounded-lg border border-gray-200 space-y-3">
+                        <label class="block text-sm font-bold text-gray-700">Bemerkung / Abweichung 1</label>
+                        <textarea id="otherText1" rows="2" placeholder="Erste zusätzliche Anmerkung..." 
+                            class="w-full border border-gray-300 rounded-lg p-3 custom-ring focus:border-henkelRed transition bg-white text-sm"></textarea>
+                        
+                        <div class="flex items-center space-x-3 pt-1">
+                            <input type="file" accept="image/*" capture="environment" id="otherImage1" onchange="previewImage(this, 'preview_other1', 'other1')" 
+                                class="visually-hidden-input">
+                            
+                            <button type="button" id="btn_other1" onclick="document.getElementById('otherImage1').click()"
+                                class="bg-gray-600 hover:bg-gray-700 text-white text-xs font-bold py-2 px-4 rounded-full shadow flex items-center space-x-1.5 transition">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                <span>Foto 1 aufnehmen</span>
+                            </button>
+
+                            <div id="preview_other1" class="hidden">
+                                <img src="" alt="Vorschau Foto 1" onclick="document.getElementById('otherImage1').click()"
+                                    class="h-12 w-12 rounded border-2 border-white shadow object-cover cursor-pointer hover:opacity-80 transition">
+                            </div>
                         </div>
                     </div>
+
+                    <!-- Bemerkung 2 -->
+                    <div class="p-4 bg-gray-50 rounded-lg border border-gray-200 space-y-3">
+                        <label class="block text-sm font-bold text-gray-700">Bemerkung / Abweichung 2</label>
+                        <textarea id="otherText2" rows="2" placeholder="Zweite zusätzliche Anmerkung..." 
+                            class="w-full border border-gray-300 rounded-lg p-3 custom-ring focus:border-henkelRed transition bg-white text-sm"></textarea>
+                        
+                        <div class="flex items-center space-x-3 pt-1">
+                            <input type="file" accept="image/*" capture="environment" id="otherImage2" onchange="previewImage(this, 'preview_other2', 'other2')" 
+                                class="visually-hidden-input">
+                            
+                            <button type="button" id="btn_other2" onclick="document.getElementById('otherImage2').click()"
+                                class="bg-gray-600 hover:bg-gray-700 text-white text-xs font-bold py-2 px-4 rounded-full shadow flex items-center space-x-1.5 transition">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                <span>Foto 2 aufnehmen</span>
+                            </button>
+
+                            <div id="preview_other2" class="hidden">
+                                <img src="" alt="Vorschau Foto 2" onclick="document.getElementById('otherImage2').click()"
+                                    class="h-12 w-12 rounded border-2 border-white shadow object-cover cursor-pointer hover:opacity-80 transition">
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
@@ -144,7 +166,7 @@
         </form>
     </main>
 
-    <!-- Verstecktes Template (wird für HD JPG Render aufbereitet) -->
+    <!-- Verstecktes Template für den HD JPG-Export -->
     <div style="position: absolute; left: -9999px; top: -9999px;">
         <div id="imageTemplate" class="p-8 bg-white w-[900px] text-gray-900 font-sans">
             <div class="flex justify-between items-center border-b-4 border-henkelRed pb-4 mb-6">
@@ -163,15 +185,54 @@
                 <div class="col-span-2"><strong>Zeitstempel:</strong> <span id="pdfTimestamp"></span></div>
             </div>
 
-            <div id="pdfQuestions" class="space-y-6 mb-6">
+            <!-- DIAGRAMM & ERGEBNIS SECTION -->
+            <div class="bg-gray-50 border border-gray-200 rounded-xl p-6 mb-6 flex items-center justify-between shadow-sm">
+                <div>
+                    <h3 class="text-lg font-bold text-gray-800">Gesamtergebnis 5S Audit</h3>
+                    <p class="text-xs text-gray-500 mt-1">Zielerreichung basierend auf allen Prüfpunkten</p>
+                    <div class="w-64 bg-gray-200 h-4 rounded-full mt-4 overflow-hidden shadow-inner">
+                        <div id="pdfProgressBar" class="h-full transition-all duration-500" style="width: 0%;"></div>
+                    </div>
+                </div>
+
+                <!-- KREISDIAGRAMM (DONUT CHART VIA SVG) -->
+                <div class="relative w-32 h-32 flex items-center justify-center">
+                    <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                        <path class="text-gray-200" stroke-width="3.5" stroke="currentColor" fill="none"
+                            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                        <path id="pdfChartCircle" stroke-width="3.5" stroke-dasharray="0, 100" stroke-linecap="round" stroke="currentColor" fill="none"
+                            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    </svg>
+                    <div class="absolute flex flex-col items-center justify-center text-center">
+                        <span id="pdfPercentText" class="text-2xl font-extrabold text-gray-800">0%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="pdfQuestions" class="space-y-4 mb-6">
                 <!-- Dynamischer Inhalt -->
             </div>
 
-            <div id="pdfOtherSection" class="border-t-2 border-gray-200 pt-4">
-                <h3 class="font-bold text-gray-800 text-lg mb-2">3. Sonstiges & Bemerkungen:</h3>
-                <p id="pdfOtherText" class="text-sm bg-gray-50 p-4 rounded-lg border border-gray-200 min-h-[50px]"></p>
-                <div id="pdfOtherImageContainer" class="mt-3 hidden">
-                    <img id="pdfOtherImg" src="" class="max-h-72 rounded-lg border shadow-sm">
+            <!-- Sonstiges Section im Protokoll (2 Einträge) -->
+            <div id="pdfOtherSection" class="border-t-2 border-gray-200 pt-4 space-y-4">
+                <h3 class="font-bold text-gray-800 text-lg">3. Sonstiges & Bemerkungen:</h3>
+                
+                <!-- Eintrag 1 -->
+                <div id="pdfOtherCard1" class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                    <h4 class="font-bold text-xs text-gray-500 uppercase tracking-wider mb-1">Bemerkung 1</h4>
+                    <p id="pdfOtherText1" class="text-sm min-h-[24px]"></p>
+                    <div id="pdfOtherImageContainer1" class="mt-3 hidden">
+                        <img id="pdfOtherImg1" src="" class="max-h-60 rounded-lg border shadow-sm">
+                    </div>
+                </div>
+
+                <!-- Eintrag 2 -->
+                <div id="pdfOtherCard2" class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                    <h4 class="font-bold text-xs text-gray-500 uppercase tracking-wider mb-1">Bemerkung 2</h4>
+                    <p id="pdfOtherText2" class="text-sm min-h-[24px]"></p>
+                    <div id="pdfOtherImageContainer2" class="mt-3 hidden">
+                        <img id="pdfOtherImg2" src="" class="max-h-60 rounded-lg border shadow-sm">
+                    </div>
                 </div>
             </div>
         </div>
@@ -189,7 +250,6 @@
 
         const imageStore = {};
 
-        // Zeitstempel ohne Sekunden: "DD.MM.YYYY, HH:MM"
         function getFormattedTimestamp() {
             const now = new Date();
             return now.toLocaleString('de-DE', {
@@ -204,7 +264,7 @@
         function updateClock() {
             document.getElementById('liveClock').innerText = getFormattedTimestamp();
         }
-        setInterval(updateClock, 10000); // Reicht alle 10 Sek da keine Sekundenanzeige
+        setInterval(updateClock, 10000);
         updateClock();
 
         const container = document.getElementById('questionsContainer');
@@ -214,16 +274,20 @@
             card.className = "p-4 bg-gray-50 rounded-lg border border-gray-200 space-y-3";
             
             card.innerHTML = `
-                <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2">
+                <div class="flex flex-col lg:flex-row justify-between lg:items-center gap-3">
                     <span class="font-semibold text-gray-800">${index + 1}. ${q}</span>
-                    <div class="flex items-center space-x-4 bg-white p-1.5 rounded-lg border shadow-inner">
-                        <label class="inline-flex items-center cursor-pointer">
-                            <input type="radio" name="${qId}_status" value="OK" checked class="text-henkelRed focus:ring-henkelRed h-5 w-5">
-                            <span class="ml-2 text-sm text-green-700 font-bold">OK</span>
+                    <div class="flex flex-wrap items-center gap-2 bg-white p-1.5 rounded-lg border shadow-inner">
+                        <label class="inline-flex items-center cursor-pointer px-2 py-1 rounded hover:bg-green-50">
+                            <input type="radio" name="${qId}_status" value="100" checked class="text-green-600 focus:ring-green-500 h-4 w-4">
+                            <span class="ml-1.5 text-xs font-bold text-green-700">100% erfüllt</span>
                         </label>
-                        <label class="inline-flex items-center cursor-pointer">
-                            <input type="radio" name="${qId}_status" value="NOK" class="text-henkelRed focus:ring-henkelRed h-5 w-5">
-                            <span class="ml-2 text-sm text-red-600 font-bold">NOK</span>
+                        <label class="inline-flex items-center cursor-pointer px-2 py-1 rounded hover:bg-amber-50">
+                            <input type="radio" name="${qId}_status" value="50" class="text-amber-500 focus:ring-amber-400 h-4 w-4">
+                            <span class="ml-1.5 text-xs font-bold text-amber-600">50% erfüllt</span>
+                        </label>
+                        <label class="inline-flex items-center cursor-pointer px-2 py-1 rounded hover:bg-red-50">
+                            <input type="radio" name="${qId}_status" value="0" class="text-red-600 focus:ring-red-500 h-4 w-4">
+                            <span class="ml-1.5 text-xs font-bold text-red-600">Nicht erfüllt</span>
                         </label>
                     </div>
                 </div>
@@ -252,10 +316,9 @@
             container.appendChild(card);
         });
 
-        function previewImage(input, previewId, storeKey = null) {
+        function previewImage(input, previewId, storeKey) {
             const file = input.files[0];
-            const qId = storeKey || 'other';
-            const btn = document.getElementById(`btn_${qId === 'other' ? 'otherImage' : qId}`);
+            const btn = document.getElementById(`btn_${storeKey}`);
 
             if (file) {
                 const reader = new FileReader();
@@ -264,14 +327,10 @@
                     const img = previewDiv.querySelector('img');
                     img.src = e.target.result;
                     
-                    btn.classList.add('hidden');
+                    if (btn) btn.classList.add('hidden');
                     previewDiv.classList.remove('hidden');
 
-                    if(storeKey) {
-                        imageStore[storeKey] = e.target.result;
-                    } else if(previewId === 'preview_other') {
-                        imageStore['other'] = e.target.result;
-                    }
+                    imageStore[storeKey] = e.target.result;
                 };
                 reader.readAsDataURL(file);
             }
@@ -288,10 +347,9 @@
 
             const downloadBtn = document.getElementById('downloadBtn');
             const originalBtnText = downloadBtn.innerHTML;
-            downloadBtn.innerHTML = `<span>Erstelle Ultra-HD Bild...</span>`;
+            downloadBtn.innerHTML = `<span>Berechne Diagramm & Erstelle HD-Bild...</span>`;
             downloadBtn.disabled = true;
 
-            // Zeitstempel im Protokoll ohne Sekunden festschreiben
             document.getElementById('pdfInspector').innerText = name;
             document.getElementById('pdfLocation').innerText = location;
             document.getElementById('pdfTimestamp').innerText = getFormattedTimestamp();
@@ -299,19 +357,33 @@
             const pdfQuestions = document.getElementById('pdfQuestions');
             pdfQuestions.innerHTML = '';
 
+            let totalPoints = 0;
+            const maxPoints = questions.length * 100;
+
             questions.forEach((q, index) => {
                 const qId = `q_${index}`;
-                const status = document.querySelector(`input[name="${qId}_status"]:checked`).value;
+                const val = parseInt(document.querySelector(`input[name="${qId}_status"]:checked`).value);
+                totalPoints += val;
+
                 const note = document.getElementById(`${qId}_text`).value.trim();
                 const imgSrc = imageStore[qId];
 
-                const statusBg = status === 'OK' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
+                let badgeClass = "bg-green-100 text-green-800 border-green-300";
+                let statusLabel = "100% erfüllt";
+
+                if (val === 50) {
+                    badgeClass = "bg-amber-100 text-amber-800 border-amber-300";
+                    statusLabel = "50% erfüllt";
+                } else if (val === 0) {
+                    badgeClass = "bg-red-100 text-red-800 border-red-300";
+                    statusLabel = "Nicht erfüllt";
+                }
 
                 let qHtml = `
-                    <div class="border-b border-gray-200 pb-4">
+                    <div class="border-b border-gray-200 pb-3">
                         <div class="flex justify-between items-center font-bold text-base">
                             <span class="text-gray-900">${index + 1}. ${q}</span>
-                            <span class="px-3 py-1 rounded-full text-sm ${statusBg}">${status}</span>
+                            <span class="px-3 py-1 rounded-full text-xs border font-bold ${badgeClass}">${statusLabel}</span>
                         </div>
                         ${note ? `<p class="text-sm text-gray-700 mt-2 bg-gray-50 p-2.5 rounded border"><strong>Bemerkung:</strong> ${note}</p>` : ''}
                         ${imgSrc ? `<div class="mt-3"><img src="${imgSrc}" class="max-h-60 rounded-lg border shadow-sm"></div>` : ''}
@@ -320,21 +392,53 @@
                 pdfQuestions.innerHTML += qHtml;
             });
 
-            const otherText = document.getElementById('otherText').value.trim();
-            document.getElementById('pdfOtherText').innerText = otherText || 'Keine Einträge';
+            // Gesamtergebnis in Prozent berechnen
+            const percentResult = Math.round((totalPoints / maxPoints) * 100);
+
+            // Diagramm & Farben anpassen
+            document.getElementById('pdfPercentText').innerText = `${percentResult}%`;
             
-            const pdfOtherContainer = document.getElementById('pdfOtherImageContainer');
-            if (imageStore['other']) {
-                document.getElementById('pdfOtherImg').src = imageStore['other'];
-                pdfOtherContainer.classList.remove('hidden');
+            const chartCircle = document.getElementById('pdfChartCircle');
+            const progressBar = document.getElementById('pdfProgressBar');
+            
+            chartCircle.setAttribute('stroke-dasharray', `${percentResult}, 100`);
+            progressBar.style.width = `${percentResult}%`;
+
+            let chartColorClass = "text-green-500 bg-green-500";
+            if (percentResult < 50) {
+                chartColorClass = "text-red-500 bg-red-500";
+            } else if (percentResult < 85) {
+                chartColorClass = "text-amber-500 bg-amber-500";
+            }
+
+            chartCircle.setAttribute('class', chartColorClass.split(' ')[0]);
+            progressBar.setAttribute('class', `h-full ${chartColorClass.split(' ')[1]}`);
+
+            // Sonstiges Feld 1 verarbeiten
+            const otherText1 = document.getElementById('otherText1').value.trim();
+            document.getElementById('pdfOtherText1').innerText = otherText1 || 'Keine Einträge';
+            const pdfOtherContainer1 = document.getElementById('pdfOtherImageContainer1');
+            if (imageStore['other1']) {
+                document.getElementById('pdfOtherImg1').src = imageStore['other1'];
+                pdfOtherContainer1.classList.remove('hidden');
             } else {
-                pdfOtherContainer.classList.add('hidden');
+                pdfOtherContainer1.classList.add('hidden');
+            }
+
+            // Sonstiges Feld 2 verarbeiten
+            const otherText2 = document.getElementById('otherText2').value.trim();
+            document.getElementById('pdfOtherText2').innerText = otherText2 || 'Keine Einträge';
+            const pdfOtherContainer2 = document.getElementById('pdfOtherImageContainer2');
+            if (imageStore['other2']) {
+                document.getElementById('pdfOtherImg2').src = imageStore['other2'];
+                pdfOtherContainer2.classList.remove('hidden');
+            } else {
+                pdfOtherContainer2.classList.add('hidden');
             }
 
             const element = document.getElementById('imageTemplate');
             
             try {
-                // scale: 3 erzeugt ein Ultra-HD JPG Bild
                 const canvas = await html2canvas(element, {
                     scale: 3, 
                     useCORS: true,
@@ -342,13 +446,11 @@
                     windowWidth: 900
                 });
 
-                // Export als JPG mit höchster Qualität (1.0)
                 const imgData = canvas.toDataURL('image/jpeg', 1.0);
                 
-                // Automatischer Download der JPG-Datei
                 const link = document.createElement('a');
                 const dateClean = new Date().toISOString().slice(0,10);
-                link.download = `5S_Rundgang_${location.replace(/\s+/g, '_')}_${dateClean}.jpg`;
+                link.download = `5S_Protokoll_${percentResult}Prozent_${location.replace(/\s+/g, '_')}_${dateClean}.jpg`;
                 link.href = imgData;
                 link.click();
 
