@@ -200,7 +200,7 @@
                     <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
                         <path class="text-gray-200" stroke-width="3.5" stroke="currentColor" fill="none"
                             d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                        <path id="pdfChartCircle" stroke-width="3.5" stroke-dasharray="0, 100" stroke-linecap="round" stroke="currentColor" fill="none"
+                        <path id="pdfChartCircle" stroke-width="3.5" stroke-dasharray="0, 100" stroke-linecap="round" fill="none"
                             d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
                     </svg>
                     <div class="absolute flex flex-col items-center justify-center text-center">
@@ -404,16 +404,21 @@
             chartCircle.setAttribute('stroke-dasharray', `${percentResult}, 100`);
             progressBar.style.width = `${percentResult}%`;
 
-            // FEINJUSTIERUNG: Farbcodierung für das Diagramm (Grün ab 75%)
-            let chartColorClass = "text-green-500 bg-green-500";
+            // Direktes Zuweisen der Hex-Farbcodes verhindert HTML/SVG-Farbkonflikte
+            let strokeColor = "#22c55e"; // Grün (#22c55e) ab 75%
+            let bgClass = "bg-green-500";
+
             if (percentResult < 50) {
-                chartColorClass = "text-red-500 bg-red-500";
+                strokeColor = "#ef4444"; // Rot
+                bgClass = "bg-red-500";
             } else if (percentResult < 75) {
-                chartColorClass = "text-amber-500 bg-amber-500";
+                strokeColor = "#f59e0b"; // Gelb/Amber
+                bgClass = "bg-amber-500";
             }
 
-            chartCircle.setAttribute('class', chartColorClass.split(' ')[0]);
-            progressBar.setAttribute('class', `h-full ${chartColorClass.split(' ')[1]}`);
+            // Exakte Stroke-Farbe für SVG setzen
+            chartCircle.setAttribute('stroke', strokeColor);
+            progressBar.setAttribute('class', `h-full ${bgClass}`);
 
             // Sonstiges Feld 1 verarbeiten
             const otherText1 = document.getElementById('otherText1').value.trim();
