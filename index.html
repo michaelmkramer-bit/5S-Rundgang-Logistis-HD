@@ -404,10 +404,11 @@
             chartCircle.setAttribute('stroke-dasharray', `${percentResult}, 100`);
             progressBar.style.width = `${percentResult}%`;
 
+            // FEINJUSTIERUNG: Farbcodierung für das Diagramm (Grün ab 75%)
             let chartColorClass = "text-green-500 bg-green-500";
             if (percentResult < 50) {
                 chartColorClass = "text-red-500 bg-red-500";
-            } else if (percentResult < 85) {
+            } else if (percentResult < 75) {
                 chartColorClass = "text-amber-500 bg-amber-500";
             }
 
