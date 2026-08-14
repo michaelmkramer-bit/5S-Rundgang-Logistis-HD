@@ -166,6 +166,23 @@
         </form>
     </main>
 
+    <!-- iOS Speichern Modal (Modal für Safari / iPhone / iPad) -->
+    <div id="iosModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex-col items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-5 text-center shadow-2xl relative my-auto">
+            <h3 class="text-xl font-bold text-gray-900 mb-1">Protokoll bereit!</h3>
+            <p class="text-xs text-gray-600 mb-4 bg-amber-50 border border-amber-200 text-amber-800 p-2.5 rounded-lg">
+                <strong>iOS-Hinweis:</strong> Halten Sie das Bild unten kurz <strong>gedrückt</strong> und wählen Sie <strong>"Zu Fotos hinzufügen"</strong> oder <strong>"Bild sichern"</strong>.
+            </p>
+            <div class="max-h-[60vh] overflow-y-auto rounded-lg border shadow-inner mb-4 bg-gray-100">
+                <img id="iosResultImg" src="" alt="5S Protokoll Resultat" class="w-full h-auto block">
+            </div>
+            <button onclick="document.getElementById('iosModal').classList.add('hidden'); document.getElementById('iosModal').classList.remove('flex');" 
+                class="w-full bg-henkelRed hover:bg-henkelRedDark text-white font-bold py-3 rounded-xl shadow transition">
+                Schließen
+            </button>
+        </div>
+    </div>
+
     <!-- Verstecktes Template für den HD JPG-Export -->
     <div style="position: absolute; left: -9999px; top: -9999px;">
         <div id="imageTemplate" class="p-8 bg-white w-[900px] text-gray-900 font-sans">
@@ -453,12 +470,29 @@
                 });
 
                 const imgData = canvas.toDataURL('image/jpeg', 1.0);
-                
-                const link = document.createElement('a');
-                const dateClean = new Date().toISOString().slice(0,10);
-                link.download = `5S_Protokoll_${percentResult}Prozent_${location.replace(/\s+/g, '_')}_${dateClean}.jpg`;
-                link.href = imgData;
-                link.click();
+                const dateClean = new Date().toISOString().slice(0, 10);
+                const fileName = `5S_Protokoll_${percentResult}Prozent_${location.replace(/\s+/g, '_')}_${dateClean}.jpg`;
+
+                // iOS-Erkennung (iPhone, iPad, iPod sowie Safari auf macOS/iPadOS im Touch-Modus)
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+                              (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+                if (isIOS) {
+                    // Auf iOS: Bild im integrierten Modal anzeigen für einfaches "Gedrückthalten & Sichern"
+                    const iosImg = document.getElementById('iosResultImg');
+                    iosImg.src = imgData;
+                    const iosModal = document.getElementById('iosModal');
+                    iosModal.classList.remove('hidden');
+                    iosModal.classList.add('flex');
+                } else {
+                    // Standard-Download für Android & PC/Desktop
+                    const link = document.createElement('a');
+                    link.download = fileName;
+                    link.href = imgData;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }
 
             } catch (error) {
                 console.error("JPG Export Fehler:", error);
